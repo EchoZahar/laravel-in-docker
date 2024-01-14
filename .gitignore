@@ -1,6 +1,5 @@
 .idea
 .DS_Store
 src
-redis/data
-mysql/data
-cron/cron
+docker/redis/data
+docker/mysql/data

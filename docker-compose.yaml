@@ -3,6 +3,7 @@ version: '3'
 services:
     nginx:
         image: nginx:stable
+        container_name: nginx
         ports:
           - "80:80"
           - "443:443"
@@ -16,8 +17,9 @@ services:
           - redis
           - supervisor
 
-    php: 
+    php:
         build: ./docker/php/
+        container_name: php
         expose:
           - 9000
         volumes:
@@ -28,15 +30,17 @@ services:
             PHP_IDE_CONFIG: 'serverName=docker'
             PHP_MEMORY_LIMIT: 2048M
             PHP_UPLOAD_LIMIT: 2048M
-# run composer (example install laravel): docker compose run --rm composer
+    # run composer (example install laravel): docker compose run --rm composer
     composer:
+        container_name: composer
         build: ./docker/composer/
         volumes:
           - ./src:/var/www/laravel
         depends_on:
           - php
-# run artisan (example): docker compose run --rm artisan list
+    # run artisan (example): docker compose run --rm artisan list
     artisan:
+        container_name: artisan
         build: ./docker/php/
         volumes:
           - ./:/var/www/laravel
@@ -45,6 +49,7 @@ services:
           - php
 
     redis:
+        container_name: redis
         image: redis:alpine
         ports:
           - "6379:6379"
@@ -53,6 +58,7 @@ services:
 
     mariadb:
         image: mariadb:latest
+        container_name: mariadb
         ports:
           - "3306:3306"
         env_file:
@@ -80,9 +86,11 @@ services:
 
     supervisor:
         build: ./docker/supervisor/
+        container_name: supervisor
 
     cron:
         build: ./docker/cron/
+        container_name: cron
         volumes:
           - ./src:/var/www/laravel
         entrypoint: ["php", "/var/www/laravel/artisan"]
